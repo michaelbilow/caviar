@@ -42,11 +42,12 @@ double PostCal::likelihood(int * configure, double * stat, double NCP) {
 	gsl_matrix * tmpResultMatrix1N		= gsl_matrix_calloc (1, snpCount);
 	gsl_matrix * tmpResultMatrix11      = gsl_matrix_calloc (1, 1);
 
-        for(int i = 0; i < snpCount; i++) {
-                gsl_matrix_set(statMatrix,i,0,stat[i]);
-                gsl_matrix_set(statMatrixtTran,0,i,stat[i]);
-        	coutOne += configure[i];
+    for(int i = 0; i < snpCount; i++) {
+        gsl_matrix_set(statMatrix,i,0,stat[i]);
+        gsl_matrix_set(statMatrixtTran,0,i,stat[i]);
+        coutOne += configure[i];
 	}
+
 	gsl_matrix_memcpy(tmpResultMatrix1, sigmaMatrix);
 	for(int i = 0; i < snpCount; i++) {
 		if(configure[i] == 1){
@@ -168,17 +169,19 @@ double PostCal::totalLikelihood(double * stat, double NCP) {
 
 	for(long int i = 0; i < snpCount; i++) 
 		configure[i] = 0;
+
 	for(long int i = 0; i < total_iteration; i++) {
-                tmp_likelihood = likelihood(configure, stat, NCP) * (pow(SMALL, num))*(pow(1-SMALL, snpCount-num));
-                sumLikelihood += tmp_likelihood;
+		tmp_likelihood = likelihood(configure, stat, NCP) * (pow(SMALL, num))*(pow(1-SMALL, snpCount-num));
+		sumLikelihood += tmp_likelihood;
 		for(int j = 0; j < snpCount; j++) {
-                        postValues[j] = postValues[j] + tmp_likelihood * configure[j];
+			postValues[j] = postValues[j] + tmp_likelihood * configure[j];
 		}
 		histValues[num] = histValues[num] + tmp_likelihood;
-                num = nextBinary(configure, snpCount);
-       		if(i % 1000 == 0)
-			cout << i << " "  << sumLikelihood << endl;
+		num = nextBinary(configure, snpCount);
+        if(i % 1000 == 0)
+            cout << i << " "  << sumLikelihood << endl;
 	}
+
 	for(int i = 0; i <= maxCausalSNP; i++)
 		histValues[i] = histValues[i]/sumLikelihood;
         free(configure);
@@ -202,27 +205,27 @@ double PostCal::findOptimalSetGreedy(double * stat, double NCP, char * configure
 
 	printf("Total Likelihood= %e SNP=%d \n", total_likelihood, snpCount);
 	
-        std::vector<data> items;
-        std::set<int>::iterator it;
-	//output the poster to files
-        for(int i = 0; i < snpCount; i++) {
-             //printf("%d==>%e ",i, postValues[i]/total_likelihood);
-             items.push_back(data(postValues[i]/total_likelihood, i, 0));
-        }
-        printf("\n");
-        std::sort(items.begin(), items.end(), by_number());
-        for(int i = 0; i < snpCount; i++)
-                rank[i] = items[i].index1;
+	std::vector<data> items;
+	std::set<int>::iterator it;
+	//output the posterior to files
+	for(int i = 0; i < snpCount; i++) {
+		 //printf("%d==>%e ",i, postValues[i]/total_likelihood);
+		 items.push_back(data(postValues[i]/total_likelihood, i, 0));
+	}
+	printf("\n");
+	std::sort(items.begin(), items.end(), by_number());
+	for(int i = 0; i < snpCount; i++)
+			rank[i] = items[i].index1;
 
-        for(int i = 0; i < snpCount; i++)
-                configure[i] = '0';
-        do{
-                rho += postValues[rank[index]]/total_likelihood;
-                configure[rank[index]] = '1';
-                printf("%d %e\n", rank[index], rho);
-                index++;
-        } while( rho < inputRho);
+	for(int i = 0; i < snpCount; i++)
+			configure[i] = '0';
+	do{
+			rho += postValues[rank[index]]/total_likelihood;
+			configure[rank[index]] = '1';
+			printf("%d %e\n", rank[index], rho);
+			index++;
+	} while( rho < inputRho);
 
-        printf("\n");
+	printf("\n");
 	return(0);
 }

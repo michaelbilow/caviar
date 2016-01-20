@@ -71,21 +71,21 @@ int main( int argc, char *argv[]  ){
 	
 	//program is running
 	cout << "@-------------------------------------------------------------@" << endl;
-	cout << "| CAVIAR!		| 	   v0.4         |  18/Nov/2015 | " << endl;
+	cout << "|      CAVIAR!		| 	      v0.4         |    18/Nov/2015    |" << endl;
 	cout << "|-------------------------------------------------------------|" << endl;
-	cout << "| (C) 2014 Farhad Hormozdiari, GNU General Public License, v2 |" << endl;
+	cout << "|         (c) 2014-2016 Farhad Hormozdiari, GNU GPL v2        |" << endl;
 	cout << "|-------------------------------------------------------------|" << endl;
-	cout << "| For documentation, citation & bug-report instructions:      |" << endl;
-	cout << "| 		http://genetics.cs.ucla.edu/caviar/            |" << endl;
+	cout << "|   For documentation, citation & bug-report instructions:    |" << endl;
+	cout << "| 		      http://genetics.cs.ucla.edu/caviar/              |" << endl;
 	cout << "@-------------------------------------------------------------@" << endl;	
 
 	fileSize(ldFile, tmpSize);
 	snpCount = (int)sqrt(tmpSize);
 	
 	sigma     = new double[snpCount * snpCount];
-        stat      = new double[snpCount];
-        configure = new char[snpCount];
-        rank      = new int[snpCount];
+	stat      = new double[snpCount];
+	configure = new char[snpCount];
+	rank      = new int[snpCount];
 	snpNames  = new string [snpCount];
 
 	importData(ldFile, sigma);		
