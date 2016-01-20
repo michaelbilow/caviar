@@ -106,48 +106,48 @@ int PostCal::nextBinary(int * data, int size) {
 	int i = 0;
 	int total_one = 0;	
 	int index = size-1;
-        int one_countinus_in_end = 0;
+    int one_countinus_in_end = 0;
 
-        while(index >= 0 && data[index] == 1) {
-                index = index - 1;
-                one_countinus_in_end = one_countinus_in_end + 1;
+    while(index >= 0 && data[index] == 1) {
+        index = index - 1;
+        one_countinus_in_end = one_countinus_in_end + 1;
 	}
 	if(index >= 0) {
-        	while(index >= 0 && data[index] == 0) {
-               	 index = index - 1;	
+        while(index >= 0 && data[index] == 0) {
+            index = index - 1;
 		}
 	}
-        if(index == -1) {
-                while(i <  one_countinus_in_end+1 && i < size) {
-                        data[i] = 1;
-                        i=i+1;
+    if(index == -1) {
+        while(i <  one_countinus_in_end+1 && i < size) {
+            data[i] = 1;
+            i=i+1;
 		}
-                i = 0;
-                while(i < size-one_countinus_in_end-1) {
-                        data[i+one_countinus_in_end+1] = 0;
-                        i=i+1;
+        i = 0;
+        while(i < size-one_countinus_in_end-1) {
+            data[i+one_countinus_in_end+1] = 0;
+            i=i+1;
 		}
-	}
-        else if(one_countinus_in_end == 0) {
-                data[index] = 0;
-                data[index+1] = 1;
+	} else if(one_countinus_in_end == 0) {
+        data[index] = 0;
+        data[index+1] = 1;
 	} else {
-                data[index] = 0;
-                while(i < one_countinus_in_end + 1) {
-                        data[i+index+1] = 1;
+        data[index] = 0;
+        while(i < one_countinus_in_end + 1) {
+            data[i+index+1] = 1;
 			if(i+index+1 >= size)
 				printf("ERROR3 %d\n", i+index+1);
-                        i=i+1;
+            i=i+1;
 		}
-                i = 0;
-                while(i < size - index - one_countinus_in_end - 2) {
-                        data[i+index+one_countinus_in_end+2] = 0;
-			if(i+index+one_countinus_in_end+2 >= size) {
+        i = 0;
+        while(i < size - index - one_countinus_in_end - 2) {
+            data[i+index+one_countinus_in_end+2] = 0;
+            if(i+index+one_countinus_in_end+2 >= size) {
 				printf("ERROR4 %d\n", i+index+one_countinus_in_end+2);
 			}
-                        i=i+1;
+            i=i+1;
 		}
 	}
+
 	i = 0;
 	total_one = 0;
 	for(i = 0; i < size; i++)
@@ -184,8 +184,9 @@ double PostCal::totalLikelihood(double * stat, double NCP) {
 
 	for(int i = 0; i <= maxCausalSNP; i++)
 		histValues[i] = histValues[i]/sumLikelihood;
-        free(configure);
-        return(sumLikelihood);
+
+    free(configure);
+    return(sumLikelihood);
 }
 
 /*
@@ -195,10 +196,10 @@ double PostCal::totalLikelihood(double * stat, double NCP) {
 */
 double PostCal::findOptimalSetGreedy(double * stat, double NCP, char * configure, int *rank,  double inputRho) {
 	int index = 0;
-        double rho = 0;
-        double total_likelihood = 0;
+    double rho = 0;
+    double total_likelihood = 0;
 
-        totalLikelihood(stat, NCP);
+    totalLikelihood(stat, NCP);
 
 	for(int i = 0; i < snpCount; i++)
 		total_likelihood += postValues[i];
@@ -218,12 +219,13 @@ double PostCal::findOptimalSetGreedy(double * stat, double NCP, char * configure
 			rank[i] = items[i].index1;
 
 	for(int i = 0; i < snpCount; i++)
-			configure[i] = '0';
+        configure[i] = '0';
+
 	do{
-			rho += postValues[rank[index]]/total_likelihood;
-			configure[rank[index]] = '1';
-			printf("%d %e\n", rank[index], rho);
-			index++;
+        rho += postValues[rank[index]]/total_likelihood;
+        configure[rank[index]] = '1';
+        printf("%d %e\n", rank[index], rho);
+        index++;
 	} while( rho < inputRho);
 
 	printf("\n");
