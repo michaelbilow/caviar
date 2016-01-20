@@ -29,18 +29,18 @@ string PostCal::convertConfig2String(int * config, int size) {
 double PostCal::likelihood(int * configure, double * stat, double NCP) {
 	int coutOne = 0;
 	int gsl_tmp = 0;
-        double matDet = 0;
+	double matDet = 0;
 	double res    = 0;
 
-	gsl_matrix * statMatrix                 = gsl_matrix_calloc (snpCount, 1);
-	gsl_matrix * statMatrixtTran            = gsl_matrix_calloc (1, snpCount);
+	gsl_matrix * statMatrix         = gsl_matrix_calloc (snpCount, 1);
+	gsl_matrix * statMatrixtTran    = gsl_matrix_calloc (1, snpCount);
 	gsl_matrix * configMatrix		= gsl_matrix_calloc (snpCount, 1);
 
 	gsl_matrix * tmpResultMatrix		= gsl_matrix_calloc (snpCount, 1);
 	gsl_matrix * tmpResultMatrix1 		= gsl_matrix_calloc (snpCount, snpCount);
-	gsl_matrix * tmpResultMatrix2           = gsl_matrix_calloc (snpCount, snpCount);
+	gsl_matrix * tmpResultMatrix2       = gsl_matrix_calloc (snpCount, snpCount);
 	gsl_matrix * tmpResultMatrix1N		= gsl_matrix_calloc (1, snpCount);
-	gsl_matrix * tmpResultMatrix11          = gsl_matrix_calloc (1, 1);
+	gsl_matrix * tmpResultMatrix11      = gsl_matrix_calloc (1, 1);
 
         for(int i = 0; i < snpCount; i++) {
                 gsl_matrix_set(statMatrix,i,0,stat[i]);
@@ -58,15 +58,15 @@ double PostCal::likelihood(int * configure, double * stat, double NCP) {
 
 	gsl_matrix_memcpy(tmpResultMatrix2, tmpResultMatrix1);
 	gsl_permutation *p = gsl_permutation_alloc(snpCount);
-        gsl_linalg_LU_decomp(tmpResultMatrix2, p, &gsl_tmp );
-        matDet = gsl_linalg_LU_det(tmpResultMatrix2,gsl_tmp);
+	gsl_linalg_LU_decomp(tmpResultMatrix2, p, &gsl_tmp );
+	matDet = gsl_linalg_LU_det(tmpResultMatrix2,gsl_tmp);
 
 	//gsl_linalg_cholesky_decomp(tmpResultMatrix1);
-        //gsl_linalg_cholesky_invert(tmpResultMatrix1);	
-        gsl_linalg_LU_invert(tmpResultMatrix2, p, tmpResultMatrix1);
+	//gsl_linalg_cholesky_invert(tmpResultMatrix1);
+	gsl_linalg_LU_invert(tmpResultMatrix2, p, tmpResultMatrix1);
 
 	gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, statMatrixtTran, tmpResultMatrix1, 0.0, tmpResultMatrix1N);
-        gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, tmpResultMatrix1N, statMatrix, 0.0, tmpResultMatrix11);	
+	gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, tmpResultMatrix1N, statMatrix, 0.0, tmpResultMatrix11);
 
 	res = gsl_matrix_get(tmpResultMatrix11,0,0);
 

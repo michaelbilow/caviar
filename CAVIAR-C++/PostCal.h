@@ -34,17 +34,17 @@ private:
 public:
 
 	PostCal(double * sigma, int snpCount, int maxCausalSNP, string * snpNames) {
-                this->snpNames = snpNames;
+        this->snpNames = snpNames;
 		this-> snpCount = snpCount;
 		this-> maxCausalSNP = maxCausalSNP;
-                this->sigma = new double[snpCount * snpCount];
+		this->sigma = new double[snpCount * snpCount];
 		this-> postValues = new double [snpCount];
 		this-> histValues = new double [maxCausalSNP+1];              
  
 		for(int i = 0; i < snpCount*snpCount; i++)
 			this->sigma[i] = sigma[i];
 		for(int i = 0; i < snpCount; i++)
-                        this->postValues[i] = 0;
+            this->postValues[i] = 0;
 		for(int i= 0; i <= maxCausalSNP;i++)
 			this->histValues[i] = 0;
 		baseValue = 0;
@@ -65,7 +65,7 @@ public:
 				}
 			}
 			gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, sigmaMatrix, tmpMatrix1, 0.0, tmpMatrix2);
-		        gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, tmpMatrix2, sigmaMatrix, 0.0, tmpMatrix3);	
+            gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, tmpMatrix2, sigmaMatrix, 0.0, tmpMatrix3);
 			matrixPossibleCases[i] = tmpMatrix3;
 			gsl_matrix_free(tmpMatrix1);
 			gsl_matrix_free(tmpMatrix2);	
@@ -74,8 +74,8 @@ public:
 		gsl_matrix_memcpy(invSigmaMatrix, sigmaMatrix);	
 		// GOOD FOR Positive deifnite matrices
 		//gsl_linalg_cholesky_decomp(invSigmaMatrix);
-	        //gsl_linalg_cholesky_invert(invSigmaMatrix);
-		//IF the matrix is not Positive deifnite
+        //gsl_linalg_cholesky_invert(invSigmaMatrix);
+		//IF the matrix is not Positive definite
 		int tmpS = 0;
 		gsl_permutation * p = gsl_permutation_alloc (snpCount);
 		gsl_linalg_LU_decomp(sigmaMatrix, p, &tmpS);
