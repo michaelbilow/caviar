@@ -95,9 +95,9 @@ void importData(string fileName, double * vector) {
         ifstream fin(fileName.c_str(), std::ifstream::in);
         fin >> data;
         while (fin.good()) {
-                vector[index] = data;
-                index++;
-                fin >> data;
+			vector[index] = data;
+			index++;
+			fin >> data;
         }
         fin.close();
 }
@@ -107,9 +107,9 @@ void importData(string fileName, int * vector) {
         double data = 0;
         ifstream fin(fileName.c_str(), std::ifstream::in);
         while( fin.good()  ){
-                fin >> data;
-                vector[index] = (int)data;
-                index++;
+			fin >> data;
+			vector[index] = (int)data;
+			index++;
         }
         fin.close();
 }
@@ -126,25 +126,25 @@ void importDataSecondColumn(string fileName, double * vector) {
 		istringstream iss(line);
 		iss >> dataS;
 		iss >> data;
-	        vector[index] = (double)data;
-                index++;
+        vector[index] = (double)data;
+        index++;
         }
 	cout << "reach=" << index << endl;
-        fin.close();
+    fin.close();
 }
 
 void importDataFirstColumn(string fileName, string * list) {
  	int index = 0;
-        string data = "";
-        string line = "";
+    string data = "";
+    string line = "";
 	ifstream fin(fileName.c_str(), std::ifstream::in);
-        while( getline(fin, line) ){
+    while( getline(fin, line) ){
 		istringstream iss(line);
-                iss >> data;
-                list[index] = data;
+		iss >> data;
+		list[index] = data;
 		index++;
         }
-        fin.close();
+    fin.close();
 }
 
 void fileSize(string fileName, int & size) {
@@ -204,14 +204,15 @@ void generateMean(int * causalSNP, double * sigma, int size, double * result) {
 	gsl_matrix * sigmaMatrix = gsl_matrix_alloc(size,size);
 	gsl_matrix * causalSNPMatrix = gsl_matrix_alloc(1,size);
 	for(int i = 0; i < size; i++) {
-                for(int j = 0; j < size; j++) {
-                        gsl_matrix_set(sigmaMatrix,i,j,sigma[i*size + j]);
-                }
+		for(int j = 0; j < size; j++) {
+			gsl_matrix_set(sigmaMatrix,i,j,sigma[i*size + j]);
+		}
 		gsl_matrix_set(causalSNPMatrix, 0, i, 5.7 * causalSNP[i]);
-        }
+	}
+
 	gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, causalSNPMatrix, sigmaMatrix, 0.0, resultMatrix);
 	for(int i = 0; i < size; i++)                   
-                result[i] = gsl_matrix_get(resultMatrix, 0, i);
+        result[i] = gsl_matrix_get(resultMatrix, 0, i);
 
 	gsl_matrix_free(sigmaMatrix); 
 	gsl_matrix_free(resultMatrix);
@@ -242,39 +243,39 @@ void exportVector2File(string fileName, char * data, int size) {
 }
 
 void exportVector2File(string fileName, double * data, int size) {
-        ofstream outfile(fileName.c_str(), ios::out | ios::app);
-        for (int i = 0; i < size; i++)
-                outfile << data[i] << " ";
-        outfile << endl;
-        outfile.close();
+    ofstream outfile(fileName.c_str(), ios::out | ios::app);
+    for (int i = 0; i < size; i++)
+        outfile << data[i] << " ";
+    outfile << endl;
+    outfile.close();
 }
 
 void exportVector2File(string fileName, int * data, int size) {
-        ofstream outfile(fileName.c_str(), ios::out | ios::app);
-        for (int i = 0; i < size; i++)
-                outfile << data[i] << " ";
-        outfile << endl;
-        outfile.close();
+    ofstream outfile(fileName.c_str(), ios::out | ios::app);
+    for (int i = 0; i < size; i++)
+        outfile << data[i] << " ";
+    outfile << endl;
+    outfile.close();
 }
 
 void export2File(string fileName, int data) {
-        ofstream outfile(fileName.c_str(), ios::out | ios::app);
-        outfile << data << endl;
-        outfile.close();
+    ofstream outfile(fileName.c_str(), ios::out | ios::app);
+    outfile << data << endl;
+    outfile.close();
 }
 
 // cData = aData * bData
 void matrixMul(int * aData, int * bData, int * cData, int row1, int col1, int row2, int col2) {
 	gsl_matrix * aMatrix = gsl_matrix_alloc(row1,col1);
-        gsl_matrix * bMatrix = gsl_matrix_alloc(row2,col2);
+    gsl_matrix * bMatrix = gsl_matrix_alloc(row2,col2);
 	gsl_matrix * cMatrix = gsl_matrix_alloc(row1,col2);
 	if(col1 == row2) {
 		for(int i = 0; i < row1; i++)
 			for(int j = 0; j < col1; j++)
 				gsl_matrix_set(aMatrix,i,j,aData[i*col1 + j]);
 		for(int i = 0; i < row2; i++) 
-                        for(int j = 0; j < col2; j++)
-                                gsl_matrix_set(bMatrix,i,j,bData[i*col2 + j]);	
+            for(int j = 0; j < col2; j++)
+                gsl_matrix_set(bMatrix,i,j,bData[i*col2 + j]);
 		gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, aMatrix, bMatrix, 0.0, cMatrix);
 		for(int i = 0; i < row1; i++)
 			for(int j = 0; j < col2; j++) 
@@ -300,12 +301,12 @@ void setIdentitymatrix(int * G, int snpCount, int geneCount) {
 		}
 		G[i*geneCount + (i/(snpCount/geneCount))] = 1;
 	}
-	  for(int i = 0; i < snpCount; i++) {
-                for(int j = 0; j < geneCount; j++) {
-                        printf("%d ", G[i*geneCount+j]);
-                }
-		printf("\n");
+    for(int i = 0; i < snpCount; i++) {
+        for(int j = 0; j < geneCount; j++) {
+            printf("%d ", G[i*geneCount+j]);
         }
+        printf("\n");
+    }
 }
 
 /*
@@ -314,24 +315,24 @@ This function add const to diagonal to make the matrix positive semi definite.
 void makeSigmaPositiveSemiDefinite(double * sigma, int size) {
 	int gsl_tmp = 0;
 	double matDet  = 0;
-        double addDiag = 0;
-        bool positive = false;
+    double addDiag = 0;
+    bool positive = false;
 	
 	//gsl_set_error_handler_off();	
 	gsl_matrix * tmpResultMatrix = gsl_matrix_calloc (size, size);	
 	gsl_permutation *p = gsl_permutation_alloc(size);
-        do{
-		for(int i = 0; i < size; i++) {
-                	for (int j = 0; j < size; j++) {
-                      		if(i==j)
-					gsl_matrix_set(tmpResultMatrix,i,j,sigma[i*size+j]+addDiag);
-				else
-					gsl_matrix_set(tmpResultMatrix,i,j,sigma[i*size+j]);
-			}
-        	}
+    do{
+        for(int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if(i==j)
+                    gsl_matrix_set(tmpResultMatrix,i,j,sigma[i*size+j]+addDiag);
+                else
+                    gsl_matrix_set(tmpResultMatrix,i,j,sigma[i*size+j]);
+            }
+        }
 	
 		gsl_linalg_LU_decomp(tmpResultMatrix, p, &gsl_tmp);
-       		matDet = gsl_linalg_LU_det(tmpResultMatrix,gsl_tmp);	
+        matDet = gsl_linalg_LU_det(tmpResultMatrix,gsl_tmp);
 		cout << matDet << "\t" << addDiag << endl;
 		if(matDet > 0 ) 
 			positive = true;
@@ -341,7 +342,7 @@ void makeSigmaPositiveSemiDefinite(double * sigma, int size) {
 		}
 	} while(!positive);
 	for(int i = 0; i < size*size; i++){
-                if(i%(size+1) == 0)
-                        sigma[i] = sigma[i] + addDiag;
-        }
+        if(i%(size+1) == 0)
+            sigma[i] = sigma[i] + addDiag;
+    }
 }

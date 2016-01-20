@@ -103,11 +103,12 @@ int main( int argc, char *argv[]  ){
 	for(int i = 0; i < snpCount; i++) {
 		if(configure[i] == '1')
 			outputFile << snpNames[i] << endl;
-	}			
+	}
+
 	post.printPost2File(string(outputFileName)+"_post");
-        //output the histogram data to file
-        if(histFlag)
-                post.printHist2File(string(outputFileName)+"_hist");
+	//output the histogram data to file
+	if(histFlag)
+			post.printHist2File(string(outputFileName)+"_hist");
 	
 	return 0;
 }
